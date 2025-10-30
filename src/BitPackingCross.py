@@ -1,6 +1,8 @@
 from BitPacking import * 
     
+    
 class BitPackingCross: 
+    
     
     def compress(self,tab):
         """
@@ -35,6 +37,7 @@ class BitPackingCross:
         count = int(tab_bin[6:38], 2)  # Nombre d'éléments dans le tableau
         data_bin = tab_bin[38:]  # Les bits des éléments compressés
         return [int(data_bin[i*lnmax:(i+1)*lnmax], 2) for i in range(count)]    # Décoder chaque entier 
+
 
     def get(self,tab, i):
         """

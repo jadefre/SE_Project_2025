@@ -1,0 +1,45 @@
+Projet BitPacking
+
+Ce projet a été réalisé dans le cadre du cours de Software Engineering du Master 1 Informatique, enseigné par M. Régin.
+
+Objectifs:
+Le but est de développer une classe Python, nommée BitPacking, capable de :
+-Compresser un tableau d’entiers selon différentes stratégies,
+-Décompresser le tableau afin de retrouver les données originales
+-Acceder à un élément grâce à son indice
+-Mesurer le temps d’exécution des opérations de compression et de décompression
+Trois modes de compression ont été étudiés et implémentés :
+cross /nocross /overflow
+
+
+Idée:
+Normalement, chaque entier est représenté sur 32 bits.
+Cependant, la plupart des entiers d’un tableau ne nécessitent pas autant de bits : par exemple, le nombre 12 peut être codé sur 4 bits seulement.
+L’idée du Bit Packing est donc de coder chaque entier sur le nombre minimal de bits nécessaires ln, puis de les concaténer dans une séquence binaire continue.
+Chaque segment de 32 bits est ensuite converti en un entier pour faciliter le stockage.
+
+Problèmes rencontrés et solutions
+- Lors de la décompression, il faut connaître la taille de chaque bloc binaire (ln) pour reconstruire correctement les entiers.
+Comme ln peut varier entre 1 et 32, il peut être représenté sur 6 bits.
+Il faut donc transmettre cette information en plus des données compressées.
+-Lors de la compression, la dernière section binaire peut être plus petite que 32 bits.
+On complète alors avec des 0 (padding).
+Mais à la décompression, il faut distinguer les 0 significatifs d’un entier et les 0 ajoutés uniquement pour le remplissage.
+Pour résoudre ce problème, il est nécessaire de transmettre également la taille réelle du tableau.
+Cette taille n’étant pas bornée, elle est codée sur 32 bits.
+
+Organisation:
+Le projet est divisé en plusieurs fichiers :
+BitPacking.py : contient la classe principale dont herite  les trois  sous-classes cross, nocross, overflow.
+BitPackingCross.py : implemente la methode de compression autorisant les depassements.
+BitPackingNoCross.py : implemente la methode de compression n'autorisant pas les depassements.
+BitPackingOverflow.py : implemente la methode de compression autorisant les overflows.
+measure_time.py : contient des fonctions utilitaires pour mesurer les temps moyens de compression et de décompression.
+main.py : programme principal de test.
+
+
+Résultats et observations:
+Lorsque le tableau contient peu d’entiers, le gain de place est souvent faible voire nul.
+En effet, les informations supplémentaires nécessaires (comme la taille du tableau ou les valeurs de ln) peuvent annuler l’avantage de la compression.
+En revanche, lorsque le tableau est grand et que les entiers sont petits, la compression devient très rentable.
+Dans ce cas, le gain en mémoire est important et les temps de compression/décompression restent raisonnables.
